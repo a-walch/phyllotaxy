@@ -2,9 +2,9 @@ import math as m
 import numpy as np
 
 def tableau_des_plastochron_ratio():
-    r0 = 0.24
-    rho = 0.16
-    r_asymptote = 1.054
+    r0 = 0.35
+    rho = 0.20
+    r_asymptote = 1.03
     try:
         n = int(input("define t: "))
     except:
@@ -69,14 +69,22 @@ def tableau_des_plastochron_ratio():
             if t == n - 1:
                 # Calculate divergence angles
                 div = [(theta[i + 1] - theta[i]) % 360 for i in range(len(theta) - 1)]
-                                
-                import csv
+                
+                # Extract only whole-number angles (every 10th index: 0°, 1°, 2°, ..., 360°)
+                sU_whole_angles = sU[::10]  # 361 values
+
+                from itertools import zip_longest
                 with open("thetas_et_r_de_t.csv", "w") as fd:
-                    fd.write(f"t; div; theta; Rt; U\n")
-                    i = 1
-                    for d, t, r , U in zip(div, theta, r_t, mU):
-                        fd.write(f"{i}; {d}; {t}; {r}; {U}\n")
-                        i += 1
+                    fd.write("t; div; theta r; Rt; Umin; u\n")
+                    
+                    rows = zip_longest(
+                        range(1, len(div) + 1),
+                        div, theta, r_t, mU,
+                        sU_whole_angles,
+                        fillvalue=""
+                    )
+                    for row in rows:
+                        fd.write("; ".join(str(v) for v in row) + "\n")
 
                 print(f"div: {div}")
                 print(f"theta: {theta}")
