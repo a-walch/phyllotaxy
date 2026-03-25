@@ -74,7 +74,7 @@ def tableau_des_plastochron_ratio():
                 sU_whole_angles = sU[::10]  # 361 values
 
                 from itertools import zip_longest
-                with open("thetas_et_r_de_t.csv", "w") as fd:
+                with open("theta_r_and_u.csv", "w") as fd:
                     fd.write("t; div; theta r; Rt; Umin; u\n")
                     
                     rows = zip_longest(
