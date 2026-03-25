@@ -28,8 +28,8 @@ def tableau_des_plastochron_ratio():
     r_t2 = r_t1 * tableau_intermediaire[1]
     r_t.append(r_t2)
     r_t.append(r_t1)
-    theta.append(60.0)
     theta.append(240.0)
+    theta.append(60.0)
 
     angles = np.arange(0, 3601) / 10.0
     
