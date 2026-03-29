@@ -1,35 +1,34 @@
-import math as m
 import numpy as np
 
-def tableau_des_plastochron_ratio():
+def table_of_plastochron_ratio():
     r0 = 0.35
     rho = 0.20
-    r_asymptote = 1.03
+    r_asymptote = 1.04
     try:
         n = int(input("define t: "))
     except:
         n = 50
 
-    tableau_intermediaire = r0 * np.exp(-rho * np.arange(1, n + 1)) + r_asymptote
+    intermediate_table = r0 * np.exp(-rho * np.arange(1, n + 1)) + r_asymptote
     
     # Initialization
     r_t0 = 1
-    tab_vieillisement = [0] * n
+    tab_ageing = [0] * n
     try:
-        tab_vieillisement[0] = 1
-        tab_vieillisement[1] = 1
+        tab_ageing[0] = 1
+        tab_ageing[1] = 1
     except:
         pass
     mU = []
     r_t = []
     theta = []
     gamma = 0.2
-    r_t1 = r_t0 * tableau_intermediaire[0]
-    r_t2 = r_t1 * tableau_intermediaire[1]
+    r_t1 = r_t0 * intermediate_table[0]
+    r_t2 = r_t1 * intermediate_table[1]
     r_t.append(r_t2)
     r_t.append(r_t1)
-    theta.append(240.0)
     theta.append(60.0)
+    theta.append(240.0)
 
     angles = np.arange(0, 3601) / 10.0
     
@@ -43,8 +42,8 @@ def tableau_des_plastochron_ratio():
             age = 0
         
         alpha_rad = np.radians(angles - theta[t])
-        valeur = np.sqrt(1 + r_t[t]**2 - 2*r_t[t]*np.cos(alpha_rad))
-        U_t = np.exp(-valeur/gamma - age*tab_vieillisement[t])
+        value = np.sqrt(1 + r_t[t]**2 - 2*r_t[t]*np.cos(alpha_rad))
+        U_t = np.exp(-value/gamma - age*tab_ageing[t])
         
         if t == 0:
             sU = U_t.copy()
@@ -60,8 +59,8 @@ def tableau_des_plastochron_ratio():
             try:
                 len_r_t = len(r_t)
                 # Vectorized multiplication
-                r_t = [r * tableau_intermediaire[len_r_t] for r in r_t]
-                r_t.append(tableau_intermediaire[len_r_t])
+                r_t = [r * intermediate_table[len_r_t] for r in r_t]
+                r_t.append(intermediate_table[len_r_t])
                 t = -1
             except IndexError:
                 pass
@@ -75,11 +74,11 @@ def tableau_des_plastochron_ratio():
 
                 from itertools import zip_longest
                 with open("theta_r_and_u.csv", "w") as fd:
-                    fd.write("t; div; theta r; Rt; Umin; u\n")
+                    fd.write("t; div; theta r; Rt; Umin; trigo; u\n")
                     
                     rows = zip_longest(
                         range(1, len(div) + 1),
-                        div, theta, r_t, mU,
+                        div, theta, r_t, mU, [index for index in range(361)],
                         sU_whole_angles,
                         fillvalue=""
                     )
@@ -92,4 +91,4 @@ def tableau_des_plastochron_ratio():
         
         t += 1
 
-tableau_des_plastochron_ratio()
+table_of_plastochron_ratio()
